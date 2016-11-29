@@ -10,10 +10,9 @@
 
 
 @interface YQCalendarItemView()
-@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel  *titleLabel;
 @property (nonatomic, strong) UIColor  *titleColor;
 @property (nonatomic, strong) UIColor  *selectColor;
-@property (nonatomic, assign) BOOL      selected;
 
 @end
 
@@ -48,7 +47,6 @@
 }
 
 - (void)clickAction:(UIButton *)sender {
-    self.selected = YES;
     if ([self.delegate respondsToSelector:@selector(didSelectCalendarItemView:)]) {
         [self.delegate didSelectCalendarItemView:self];
     }
@@ -75,7 +73,7 @@
 
 
 - (void)setSelectStyle:(ItemViewSelectStyle)selectStyle {
-    
+
     switch (selectStyle) {
         case ItemViewSelectStyleNone:
         {

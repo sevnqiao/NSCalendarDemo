@@ -44,6 +44,22 @@
     return _calendarTitleLabelArray;
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.clipsToBounds = YES;
+    
+    self.year = [NSDate currentYear];
+    self.month = [NSDate currentMonth];
+    selectDay = [NSDate currentDay];
+    selectMonth = [NSDate currentMonth];
+    selectYear = [NSDate currentYear];
+    
+    [self initWeekTitleLabel];
+    [self initDaysTitleLabel];
+    
+    [self getDayTitleArrWithMonth:self.month year:self.year];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -181,7 +197,7 @@
         }
         // 周末颜色改为灰色
         NSInteger lng = i % 7;
-        if ((lng == 0 || lng == 6) && itemView.selectStyle != ItemViewSelectStyleSpcial && itemView.selectStyle != ItemViewSelectStyleNormal) {
+        if ((lng == 0 || lng == 6) && itemView.title.floatValue != selectDay) {
             itemView.selectStyle = ItemViewSelectStyleWeekendOrOtherMonth;
         }
     }
