@@ -1,4 +1,4 @@
-//
+ //
 //  YQCalendarView.m
 //  NSCalendarDemo
 //
@@ -27,7 +27,7 @@
     NSInteger selectMonth;
     NSInteger selectDay;
     
-    YQCalendarItemView *_lastSelectItemView;
+    YQCalendarModel *_lastSelectCalendar;
 }
 
 @property (nonatomic, assign) NSInteger year;
@@ -165,13 +165,20 @@
 - (void)reloadItemViews{
     
     @autoreleasepool {
+    
+        YQCalendarModel *lastSelectItemModel = _lastSelectCalendar;
+        
         for (int i = 0; i< kItemTotleNum; i++) {
             
             YQCalendarItemView *itemView = _itemViewArray[i];
             
             if (i < _itemModelArray.count) {
                 YQCalendarModel *itemModel = _itemModelArray[i];
-                itemView.calendarModel = itemModel;
+                if (itemModel.date == lastSelectItemModel.date) {
+                    itemView.calendarModel = lastSelectItemModel;
+                }else{
+                    itemView.calendarModel = itemModel;
+                }
             }
         }
     }
@@ -200,14 +207,14 @@
 #pragma mark - YQCalendarItemViewDelegate
 - (void)didSelectCalendarItemView:(YQCalendarItemView *)calendarItemView {
 
-    if (_lastSelectItemView == calendarItemView) {
+    if (_lastSelectCalendar == calendarItemView.calendarModel) {
         return;
     }
     
-    if (_lastSelectItemView) {
+    if (_lastSelectCalendar) {
         
-        YQCalendarModel *itemModel = _lastSelectItemView.calendarModel;
-        
+        YQCalendarModel *itemModel = _lastSelectCalendar;
+
         NSInteger weekDay = [[NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian] component:NSWeekdayCalendarUnit fromDate:itemModel.date];
         
         if (itemModel.day == [NSDate currentDay] && itemModel.month == [NSDate currentMonth]) {
@@ -223,10 +230,26 @@
             itemModel.itemStyle = ItemViewSelectStyleNone;
         }
         
-        [_lastSelectItemView setCalendarModel:itemModel];
+        [_itemViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            YQCalendarItemView *itemView = (YQCalendarItemView *)obj;
+            
+            if ([itemView.calendarModel.date isEqualToDate:_lastSelectCalendar.date]) {
+                
+                [itemView setCalendarModel:itemModel];
+            }
+            
+        }];
+        
     }
     
-    _lastSelectItemView = calendarItemView;
+    _lastSelectCalendar = calendarItemView.calendarModel;
+    
+    [self doSomethingForTableView];
+}
+
+- (void)doSomethingForTableView {
+    NSLog(@"%ld-%ld-%ld 没有安排", (long)_lastSelectCalendar.year, (long)_lastSelectCalendar.month, (long)_lastSelectCalendar.day);
 }
 
 @end
