@@ -7,12 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-typedef NS_ENUM(NSInteger, ItemViewSelectStyle) {
-    ItemViewSelectStyleNone = 1,  // 未选中,
-    ItemViewSelectStyleNormal,    // 普通日期选中
-    ItemViewSelectStyleSpcial,    // 当前日期选中
-    ItemViewSelectStyleWeekendOrOtherMonth,   // 周末或其它月份未选中
-};
+#import "YQCalendarModel.h"
 
 @class YQCalendarItemView;
 
@@ -26,8 +21,7 @@ typedef NS_ENUM(NSInteger, ItemViewSelectStyle) {
 
 @interface YQCalendarItemView : UIView
 
-@property (nonatomic, copy  ) NSString *title;
-@property (nonatomic, assign) ItemViewSelectStyle selectStyle;
+@property (nonatomic, strong) YQCalendarModel *calendarModel;
 @property (nonatomic, assign) id<YQCalendarItemViewDelegate> delegate;
 
 @end

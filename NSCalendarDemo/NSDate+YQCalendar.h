@@ -46,9 +46,9 @@
 + (NSMutableArray *)getCurrentMonthDaysTitleWithMonth:(NSInteger)month year:(NSInteger)year;
 
 // 获取当前日历视图上需要显示的下个月的日期的数组
-+ (NSMutableArray *)getNextMonthDaysTitleWithMonth:(NSInteger)month year:(NSInteger)year;
++ (NSMutableArray *)getNextMonthDaysTitleWithCurrentMonth:(NSInteger)month currentYear:(NSInteger)year;
 
 // 获取当前日历视图上需要显示的上个月的日期的数组
-+ (NSMutableArray *)getLastMonthDaysTitleWithMonth:(NSInteger)month year:(NSInteger)year;
++ (NSMutableArray *)getLastMonthDaysTitleWithCurrentMonth:(NSInteger)month currentYear:(NSInteger)year;
 
 @end

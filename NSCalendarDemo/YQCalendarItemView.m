@@ -7,13 +7,13 @@
 //
 
 #import "YQCalendarItemView.h"
-
+#import "NSDate+YQCalendar.h"
 
 @interface YQCalendarItemView()
 @property (nonatomic, strong) UILabel  *titleLabel;
 @property (nonatomic, strong) UIColor  *titleColor;
 @property (nonatomic, strong) UIColor  *selectColor;
-
+@property (nonatomic, assign) ItemViewSelectStyle selectStyle;
 @end
 
 
@@ -47,15 +47,28 @@
 }
 
 - (void)clickAction:(UIButton *)sender {
+
+    if (self.calendarModel.day == [NSDate currentDay] && self.calendarModel.month == [NSDate currentMonth]) {
+        
+        self.calendarModel.itemStyle = ItemViewSelectStyleSpcial;
+        
+    }else{
+        
+        self.calendarModel.itemStyle = ItemViewSelectStyleNormal;
+    }
+    
+    [self setCalendarModel:_calendarModel];
+    
     if ([self.delegate respondsToSelector:@selector(didSelectCalendarItemView:)]) {
         [self.delegate didSelectCalendarItemView:self];
     }
 }
 
 
-- (void)setTitle:(NSString *)title {
-    _title = title;
-    self.titleLabel.text = title;
+- (void)setCalendarModel:(YQCalendarModel *)calendarModel {
+    _calendarModel = calendarModel;
+    self.titleLabel.text = [NSString stringWithFormat:@"%ld", (long)calendarModel.day];
+    self.selectStyle = calendarModel.itemStyle;
     [self setNeedsDisplay];
 }
 

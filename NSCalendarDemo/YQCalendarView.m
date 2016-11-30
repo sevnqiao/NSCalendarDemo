@@ -26,22 +26,32 @@
     NSInteger selectYear;
     NSInteger selectMonth;
     NSInteger selectDay;
+    
+    YQCalendarItemView *_lastSelectItemView;
 }
 
 @property (nonatomic, assign) NSInteger year;
 @property (nonatomic, assign) NSInteger month;
-@property (nonatomic, strong) NSMutableArray *calendarTitleLabelArray;
+@property (nonatomic, strong) NSMutableArray *itemViewArray;
+@property (nonatomic, strong) NSMutableArray *itemModelArray;
 
 @end
 
 
 @implementation YQCalendarView
 
-- (NSMutableArray *)calendarTitleLabelArray {
-    if (!_calendarTitleLabelArray) {
-        _calendarTitleLabelArray = [NSMutableArray array];
+- (NSMutableArray *)itemViewArray {
+    if (!_itemViewArray) {
+        _itemViewArray = [NSMutableArray array];
     }
-    return _calendarTitleLabelArray;
+    return _itemViewArray;
+}
+
+- (NSMutableArray *)itemModelArray {
+    if (!_itemModelArray) {
+        _itemModelArray = [NSMutableArray array];
+    }
+    return _itemModelArray;
 }
 
 - (void)awakeFromNib {
@@ -81,131 +91,90 @@
 }
 
 - (void)initWeekTitleLabel {
-    
-    NSArray *weekArr = @[@"日", @"一", @"二", @"三", @"四", @"五", @"六"];
-    
-    for (int i = 0; i < 7; i++) {
-        UILabel *weekTitleLabel = [[UILabel alloc]init];
-        weekTitleLabel.frame = CGRectMake(kCalendarView_Width/7 * i, 0, kCalendarView_Width/7, kItem_Width);
-        weekTitleLabel.textAlignment = NSTextAlignmentCenter;
-        weekTitleLabel.font = [UIFont systemFontOfSize:14];
-        if (i == 0 || i == 6) {
-            weekTitleLabel.textColor = [UIColor grayColor];
-        }else {
-            weekTitleLabel.textColor = [UIColor blackColor];
+    @autoreleasepool {
+        NSArray *weekArr = @[@"日", @"一", @"二", @"三", @"四", @"五", @"六"];
+        
+        for (int i = 0; i < 7; i++) {
+            UILabel *weekTitleLabel = [[UILabel alloc]init];
+            weekTitleLabel.frame = CGRectMake(kCalendarView_Width/7 * i, 0, kCalendarView_Width/7, kItem_Width);
+            weekTitleLabel.textAlignment = NSTextAlignmentCenter;
+            weekTitleLabel.font = [UIFont systemFontOfSize:14];
+            if (i == 0 || i == 6) {
+                weekTitleLabel.textColor = [UIColor grayColor];
+            }else {
+                weekTitleLabel.textColor = [UIColor blackColor];
+            }
+            weekTitleLabel.text = weekArr[i];
+            [self addSubview:weekTitleLabel];
         }
-        weekTitleLabel.text = weekArr[i];
-        [self addSubview:weekTitleLabel];
     }
 }
 
 - (void)initDaysTitleLabel {
-    
-    for (int i = 0; i< kItemTotleNum; i++) {
-        
-        NSInteger lat = i / 7;
-        NSInteger lng = i % 7;
-        
-        YQCalendarItemView *itemView = [[YQCalendarItemView alloc]initWithFrame:CGRectMake(kCalendarView_Width/7 * lng + (kCalendarView_Width/7 - kItem_Width)/2,
-                                                                                           kItem_Width + kItem_Width * lat,
-                                                                                           kItem_Width,
-                                                                                           kItem_Width)];
-        itemView.tag = i;
-        itemView.delegate = self;
-        [self addSubview:itemView];
-        
-        [self.calendarTitleLabelArray addObject:itemView];
+    @autoreleasepool {
+        for (int i = 0; i< kItemTotleNum; i++) {
+            
+            NSInteger lat = i / 7;
+            NSInteger lng = i % 7;
+            
+            YQCalendarItemView *itemView = [[YQCalendarItemView alloc]initWithFrame:CGRectMake(kCalendarView_Width/7 * lng + (kCalendarView_Width/7 - kItem_Width)/2,
+                                                                                               kItem_Width + kItem_Width * lat,
+                                                                                               kItem_Width,
+                                                                                               kItem_Width)];
+            itemView.tag = i;
+            itemView.delegate = self;
+            [self addSubview:itemView];
+            
+            [self.itemViewArray addObject:itemView];
+        }
     }
 }
 
 - (void)getDayTitleArrWithMonth:(NSInteger)month year:(NSInteger)year {
     
-    NSInteger lastYear = [NSDate getYearOfLastMonthWithMonth:month year:year];
-    NSInteger lastMonth = [NSDate getLastMonthWithMonth:month];
-    
-    NSInteger nextYear = [NSDate getYearOfNextMonthWithMonth:month year:year];
-    NSInteger nextMonth = [NSDate getNextMonthWithMonth:month];
-    
+    [self.itemModelArray removeAllObjects];
 
     // 1. 获取当前显示视图中上个月需要显示的部分
     NSMutableArray *lastMonthDayTitleArray = [NSMutableArray array];
-    [lastMonthDayTitleArray addObjectsFromArray:[NSDate getLastMonthDaysTitleWithMonth:lastMonth year:lastYear]];
+    [lastMonthDayTitleArray addObjectsFromArray:[NSDate getLastMonthDaysTitleWithCurrentMonth:month currentYear:year]];
+    [_itemModelArray addObjectsFromArray:lastMonthDayTitleArray];
     
     // 2. 获取当前显示视图中本月需要显示的部分
     NSMutableArray *currentMonthDayTitleArray = [NSMutableArray array];
     [currentMonthDayTitleArray addObjectsFromArray:[NSDate getCurrentMonthDaysTitleWithMonth:month year:year]];
-
+    [_itemModelArray addObjectsFromArray:currentMonthDayTitleArray];
+    
     // 3. 获取当前显示视图中下个月需要显示的部分
     NSMutableArray *nextMonthDayTitleArray = [NSMutableArray array];
-    [nextMonthDayTitleArray addObjectsFromArray:[NSDate getNextMonthDaysTitleWithMonth:nextMonth year:nextYear]];
+    [nextMonthDayTitleArray addObjectsFromArray:[NSDate getNextMonthDaysTitleWithCurrentMonth:month currentYear:year]];
+    [_itemModelArray addObjectsFromArray:nextMonthDayTitleArray];
     
     lastMonthNum = lastMonthDayTitleArray.count;
     currentMonthNum = currentMonthDayTitleArray.count;
     nextMonthNum = nextMonthDayTitleArray.count;
     
-    // 4. 显示的 item 的属性的控制
-    for (int i = 0; i< kItemTotleNum; i++) {
-        
-        YQCalendarItemView *itemView = _calendarTitleLabelArray[i];
-        
-        if (i < lastMonthNum) {
-            // 上个月需要显示的部分
-            itemView.title = lastMonthDayTitleArray[i];
-            itemView.selectStyle = ItemViewSelectStyleWeekendOrOtherMonth;
-            
-            if (itemView.title.floatValue == selectDay && [NSDate getLastMonthWithMonth:self.month] == selectMonth && [NSDate getYearOfLastMonthWithMonth:self.month year:self.year] == selectYear) {
-                itemView.selectStyle = ItemViewSelectStyleNormal;
-                
-            }else {
-                itemView.selectStyle = ItemViewSelectStyleWeekendOrOtherMonth;
-            }
-            
-            if (itemView.title.floatValue == [NSDate currentDay] && self.year == [NSDate currentYear] && self.month == [NSDate currentMonth]) {
-                itemView.selectStyle = ItemViewSelectStyleSpcial;
-            }
-            
-        }else if (i < lastMonthNum + currentMonthNum) {
-            // 当前月
-            itemView.title = currentMonthDayTitleArray[i - lastMonthNum];
-
-            if (itemView.title.floatValue == selectDay && self.month == selectMonth && self.year == selectYear) {
-                itemView.selectStyle = ItemViewSelectStyleNormal;
-                
-            }else {
-                itemView.selectStyle = ItemViewSelectStyleNone;
-            }
-            
-            if (itemView.title.floatValue == [NSDate currentDay] && self.year == [NSDate currentYear] && self.month == [NSDate currentMonth]) {
-                itemView.selectStyle = ItemViewSelectStyleSpcial;
-            }
-            
-        }else if (i < lastMonthNum + currentMonthNum + nextMonthNum) {
-            // 下个月需要显示的部分
-            itemView.title = nextMonthDayTitleArray[i - lastMonthNum - currentMonthNum];
-            itemView.selectStyle = ItemViewSelectStyleWeekendOrOtherMonth;
-            
-            if (itemView.title.floatValue == selectDay && [NSDate getNextMonthWithMonth:self.month] == selectMonth && [NSDate getYearOfNextMonthWithMonth:self.month year:self.year] == selectYear) {
-                itemView.selectStyle = ItemViewSelectStyleNormal;
-                
-            }else {
-                itemView.selectStyle = ItemViewSelectStyleWeekendOrOtherMonth;
-            }
-            
-            if (itemView.title.floatValue == [NSDate currentDay] && self.year == [NSDate currentYear] && self.month == [NSDate currentMonth]) {
-                itemView.selectStyle = ItemViewSelectStyleSpcial;
-            }
-        }
-        // 周末颜色改为灰色
-        NSInteger lng = i % 7;
-        if ((lng == 0 || lng == 6) && itemView.title.floatValue != selectDay) {
-            itemView.selectStyle = ItemViewSelectStyleWeekendOrOtherMonth;
-        }
-    }
-    
-    // 5. 整体的 frame 适应下高度
+    // 4. 整体的 frame 适应下高度
     CGRect rect = self.frame;
     rect.size.height = kItem_Width * (lastMonthNum + currentMonthNum + nextMonthNum <= 35 ? 6 : 7);
     self.frame = rect;
+    
+    // 5. 显示的 item 的属性的控制
+    [self reloadItemViews];
+}
+
+- (void)reloadItemViews{
+    
+    @autoreleasepool {
+        for (int i = 0; i< kItemTotleNum; i++) {
+            
+            YQCalendarItemView *itemView = _itemViewArray[i];
+            
+            if (i < _itemModelArray.count) {
+                YQCalendarModel *itemModel = _itemModelArray[i];
+                itemView.calendarModel = itemModel;
+            }
+        }
+    }
 }
 
 - (void)lastMonth {
@@ -229,60 +198,35 @@
 }
 
 #pragma mark - YQCalendarItemViewDelegate
-- (void)didSelectCalendarItemView:(YQCalendarItemView *)calendarItemView1 {
-    
-    selectDay = calendarItemView1.title.integerValue;
-    
-    
-    for (int i = 0; i < _calendarTitleLabelArray.count; i++) {
-        
-        YQCalendarItemView *calendarItemView = _calendarTitleLabelArray[i];
-        
-        if (calendarItemView == calendarItemView1) {
-            
-            if (i < lastMonthNum) {
-                selectYear = [NSDate getYearOfLastMonthWithMonth:self.month year:self.year];
-                selectMonth = [NSDate getLastMonthWithMonth:self.month];
-                
-                [self lastMonth];
-                return ;
-                
-            }else if (i < lastMonthNum + currentMonthNum) {
-                selectYear = self.year;
-                selectMonth = self.month;
-            }else{
-                selectYear = [NSDate getYearOfNextMonthWithMonth:self.month year:self.year];
-                selectMonth = [NSDate getNextMonthWithMonth:self.month];
-                
-                [self nextMonth];
-                return;
-            }
-            
-            if (self.year == [NSDate currentYear] && self.month == [NSDate currentMonth] && selectDay == [NSDate currentDay]) {
-                // 如果是当前时间
-                (calendarItemView).selectStyle = ItemViewSelectStyleSpcial;
-            }else {
-                (calendarItemView).selectStyle = ItemViewSelectStyleNormal;
-            }
-        }
-        else if (i % 7 != 0 && i % 7 != 6 && i >= lastMonthNum && i < lastMonthNum + currentMonthNum) {
-            // 当前月份
-            if (self.year == [NSDate currentYear] && self.month == [NSDate currentMonth] && i-lastMonthNum+1 == [NSDate currentDay]) {
-                // 如果是当前时间
-                (calendarItemView).selectStyle = ItemViewSelectStyleSpcial;
-            }else {
-                (calendarItemView).selectStyle = ItemViewSelectStyleNone;
-            }
-        }
-        else{
-            // 其它月份或是周末
-            (calendarItemView).selectStyle = ItemViewSelectStyleWeekendOrOtherMonth;
-        }
-        
+- (void)didSelectCalendarItemView:(YQCalendarItemView *)calendarItemView {
+
+    if (_lastSelectItemView == calendarItemView) {
+        return;
     }
     
+    if (_lastSelectItemView) {
+        
+        YQCalendarModel *itemModel = _lastSelectItemView.calendarModel;
+        
+        NSInteger weekDay = [[NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian] component:NSWeekdayCalendarUnit fromDate:itemModel.date];
+        
+        if (itemModel.day == [NSDate currentDay] && itemModel.month == [NSDate currentMonth]) {
+            
+            itemModel.itemStyle = ItemViewSelectStyleSpcial;
+            
+        }else if (weekDay == 1 || weekDay == 7 || itemModel.month != [NSDate currentMonth]) {
+            
+            itemModel.itemStyle = ItemViewSelectStyleWeekendOrOtherMonth;
+            
+        }else {
+            
+            itemModel.itemStyle = ItemViewSelectStyleNone;
+        }
+        
+        [_lastSelectItemView setCalendarModel:itemModel];
+    }
     
-    
+    _lastSelectItemView = calendarItemView;
 }
 
 @end

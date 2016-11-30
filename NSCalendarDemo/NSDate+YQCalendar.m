@@ -7,6 +7,7 @@
 //
 
 #import "NSDate+YQCalendar.h"
+#import "YQCalendarModel.h"
 
 @implementation NSDate (YQCalendar)
 
@@ -22,7 +23,7 @@
 + (NSInteger)currentMonth {
     
     
-    NSCalendar *calendar = calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [calendar components:NSCalendarUnitMonth fromDate:[NSDate date]];
     return components.month;
     
@@ -30,7 +31,7 @@
 
 + (NSInteger)currentDay {
     
-    NSCalendar *calendar = calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [calendar components:NSCalendarUnitDay fromDate:[NSDate date]];
     return components.day;
     
@@ -75,7 +76,7 @@
 // 一个月有多少天
 + (NSInteger)numberOfDaysInMonth:(NSInteger)month year:(NSInteger)year{
     
-    NSCalendar *calendar = calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDate *date = [calendar dateWithEra:1 year:year month:month day:15 hour:0 minute:0 second:0 nanosecond:0];
     NSRange monthRange = [calendar rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:date];
     return monthRange.length;
@@ -102,7 +103,7 @@
 // 这个月份的第一周有几天
 + (NSInteger)numberOfDaysAtFirstWeekInMonth:(NSInteger)month year:(NSInteger)year{
     
-    NSCalendar *calendar = calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [NSDateComponents new];
     [components setValue:month forComponent:NSCalendarUnitMonth];
     [components setValue:year forComponent:NSCalendarUnitYear];
@@ -116,7 +117,7 @@
 // 这个月份的最后一周有几天
 + (NSInteger)numberOfDaysAtLastWeekInMonth:(NSInteger)month year:(NSInteger)year{
     
-    NSCalendar *calendar = calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [NSDateComponents new];
     [components setValue:month forComponent:NSCalendarUnitMonth];
     [components setValue:year forComponent:NSCalendarUnitYear];
@@ -132,55 +133,99 @@
 + (NSMutableArray *)getCurrentMonthDaysTitleWithMonth:(NSInteger)month year:(NSInteger)year {
     
     NSMutableArray *arr = [NSMutableArray array];
-    
-    for (int i = 0; i < [self numberOfDaysInMonth:month year:year]; i++) {
+    @autoreleasepool {
+        for (int i = 0; i < [self numberOfDaysInMonth:month year:year]; i++) {
+            
+            YQCalendarModel *model = [YQCalendarModel new];
+            model.year = year;
+            model.month = month;
+            model.day = i+1;
+            
+            NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+            model.date = [calendar dateWithEra:1 year:year month:month day:i+1 hour:0 minute:0 second:0 nanosecond:0];
+            
+            NSInteger weekDay = [calendar component:NSWeekdayCalendarUnit fromDate:model.date];
+            
+            if (i+1 == [self currentDay] && month == [self currentMonth]) {
+                
+                model.itemStyle = ItemViewSelectStyleSpcial;
+                
+            }else if (weekDay == 1 || weekDay == 7) {
+
+                model.itemStyle = ItemViewSelectStyleWeekendOrOtherMonth;
+            }else {
+                model.itemStyle = ItemViewSelectStyleNone;
+            }
+            
+            [arr addObject:model];
+        }
         
-        [arr addObject:[NSString stringWithFormat:@"%d", i+1]];
+        return arr;
     }
-    return arr;
 }
 
 // 获取当前日历视图上需要显示的下个月的日期的数组
-+ (NSMutableArray *)getNextMonthDaysTitleWithMonth:(NSInteger)month year:(NSInteger)year {
-    
-    NSMutableArray *arr = [NSMutableArray array];
-    NSInteger lastMonth = [NSDate getLastMonthWithMonth:month];
-    NSInteger lastYear = [NSDate getYearOfLastMonthWithMonth:month year:year];
-    
-    // 当前月最后一周有多少天
-    NSInteger lastWeekDaysNum = [NSDate numberOfDaysAtLastWeekInMonth:lastMonth year:lastYear];
-    if (lastWeekDaysNum == 7) {
-        lastWeekDaysNum = 0;
++ (NSMutableArray *)getNextMonthDaysTitleWithCurrentMonth:(NSInteger)month currentYear:(NSInteger)year {
+    @autoreleasepool {
+        NSMutableArray *arr = [NSMutableArray array];
+        NSInteger lastMonth = [NSDate getNextMonthWithMonth:month];
+        NSInteger lastYear = [NSDate getYearOfNextMonthWithMonth:month year:year];
+        
+        // 当前月最后一周有多少天
+        NSInteger lastWeekDaysNum = [NSDate numberOfDaysAtLastWeekInMonth:month year:year];
+        if (lastWeekDaysNum == 7) {
+            lastWeekDaysNum = 0;
+        }
+        
+        for (int i = 0; i < 7 - lastWeekDaysNum; i++) {
+            
+            YQCalendarModel *model = [YQCalendarModel new];
+            model.year = lastYear;
+            model.month = lastMonth;
+            model.day = i+1;
+            model.itemStyle = ItemViewSelectStyleWeekendOrOtherMonth;
+            
+            NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+            model.date = [calendar dateWithEra:1 year:lastYear month:lastMonth day:i+1 hour:0 minute:0 second:0 nanosecond:0];
+            
+            [arr addObject:model];
+        }
+        return arr;
     }
-    for (int i = 0; i < 7 - lastWeekDaysNum; i++) {
-        [arr addObject:[NSString stringWithFormat:@"%d", i+1]];
-    }
-    
-    return arr;
 }
 
 // 获取当前日历视图上需要显示的上个月的日期的数组
-+ (NSMutableArray *)getLastMonthDaysTitleWithMonth:(NSInteger)month year:(NSInteger)year {
++ (NSMutableArray *)getLastMonthDaysTitleWithCurrentMonth:(NSInteger)month currentYear:(NSInteger)year {
     
     NSMutableArray *arr = [NSMutableArray array];
-    NSInteger nextMonth = [NSDate getNextMonthWithMonth:month];
-    NSInteger nextYear = [NSDate getYearOfNextMonthWithMonth:month year:year];
+    NSInteger nextMonth = [NSDate getLastMonthWithMonth:month];
+    NSInteger nextYear = [NSDate getYearOfLastMonthWithMonth:month year:year];
     
     // 当前月第一周有几天
-    NSInteger firstWeekDayNum = [NSDate numberOfDaysAtFirstWeekInMonth:nextMonth year:nextYear];
+    NSInteger firstWeekDayNum = [NSDate numberOfDaysAtFirstWeekInMonth:month year:year];
     
     if (firstWeekDayNum == 7) {
         firstWeekDayNum = 0;
     }
     // 1.上个月的几天
-    for (int i = 0; i < 7 - firstWeekDayNum; i++) {
-        
-        NSInteger lastMonthDaysNum = [NSDate numberOfDaysInMonth:month year:year];
-        
-        [arr addObject:[NSString stringWithFormat:@"%ld", lastMonthDaysNum - (7 - firstWeekDayNum - i) + 1]];
-        
+    @autoreleasepool {
+        for (int i = 0; i < 7 - firstWeekDayNum; i++) {
+            
+            NSInteger lastMonthDaysNum = [NSDate numberOfDaysInMonth:nextMonth year:nextYear];
+            
+            YQCalendarModel *model = [YQCalendarModel new];
+            model.year = nextYear;
+            model.month = nextMonth;
+            model.day = lastMonthDaysNum - (7 - firstWeekDayNum - i) + 1;
+            model.itemStyle = ItemViewSelectStyleWeekendOrOtherMonth;
+            
+            NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+            model.date = [calendar dateWithEra:1 year:nextYear month:nextMonth day:lastMonthDaysNum - (7 - firstWeekDayNum - i) + 1 hour:0 minute:0 second:0 nanosecond:0];
+            
+            [arr addObject:model];
+        }
+        return arr;
     }
-    return arr;
 }
 
 
