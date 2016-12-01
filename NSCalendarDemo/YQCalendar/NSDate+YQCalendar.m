@@ -185,7 +185,7 @@
             model.month = nextMonth;
             model.day = i+1;
             
-            if (i+1 == [self currentDay] && month == [self currentMonth]) {
+            if (i+1 == [self currentDay] && model.month == [self currentMonth]) {
                 
                 model.itemStyle = ItemViewSelectStyleSpcial;
                 

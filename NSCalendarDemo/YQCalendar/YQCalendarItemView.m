@@ -25,8 +25,8 @@
     
     self = [super initWithFrame:frame];
     if (self) {
-        [self initTitleLabelWithFrame:self.bounds];
-        [self initEventLayerWithFrame:CGRectMake(frame.size.width/6, frame.size.height - 6, frame.size.width*2/3, 3)];
+        [self initTitleLabelWithFrame:CGRectMake(frame.size.width/8, frame.size.width/8, frame.size.width*3/4, frame.size.width*3/4)];
+        [self initEventLayerWithFrame:CGRectMake(frame.size.width/6, frame.size.height - 3, frame.size.width*2/3, 3)];
         [self initGestureRecognizer];
     }
     return self;
@@ -38,7 +38,7 @@
     self.titleLabel.frame = frame;
     self.titleLabel.font = [UIFont systemFontOfSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.titleLabel.layer.cornerRadius = self.frame.size.width / 2.0;
+    self.titleLabel.layer.cornerRadius = self.titleLabel.frame.size.width / 2.0;
     self.titleLabel.layer.masksToBounds = YES;
     [self addSubview:self.titleLabel];
 }
