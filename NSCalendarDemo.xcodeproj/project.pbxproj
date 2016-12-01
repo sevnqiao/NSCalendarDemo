@@ -7,25 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C833DB691DEBBD3F00F3ACA2 /* NSDate+YQCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = C833DB681DEBBD3F00F3ACA2 /* NSDate+YQCalendar.m */; };
-		C833DB6C1DEBC46C00F3ACA2 /* YQCalendarItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C833DB6B1DEBC46C00F3ACA2 /* YQCalendarItemView.m */; };
-		C899FB211DEEA5F900D0F620 /* YQCalendarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C899FB201DEEA5F900D0F620 /* YQCalendarModel.m */; };
+		C899FB2B1DEEC81100D0F620 /* NSDate+YQCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = C899FB241DEEC81100D0F620 /* NSDate+YQCalendar.m */; };
+		C899FB2C1DEEC81100D0F620 /* YQCalendarItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = C899FB261DEEC81100D0F620 /* YQCalendarItemView.m */; };
+		C899FB2D1DEEC81100D0F620 /* YQCalendarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C899FB281DEEC81100D0F620 /* YQCalendarModel.m */; };
+		C899FB2E1DEEC81100D0F620 /* YQCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C899FB2A1DEEC81100D0F620 /* YQCalendarView.m */; };
+		C899FB311DEED5C600D0F620 /* YQEventModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C899FB301DEED5C600D0F620 /* YQEventModel.m */; };
 		C8D689DC1DE7D8A000A81F6D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C8D689DB1DE7D8A000A81F6D /* main.m */; };
 		C8D689DF1DE7D8A000A81F6D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C8D689DE1DE7D8A000A81F6D /* AppDelegate.m */; };
 		C8D689E21DE7D8A000A81F6D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C8D689E11DE7D8A000A81F6D /* ViewController.m */; };
 		C8D689E51DE7D8A000A81F6D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C8D689E31DE7D8A000A81F6D /* Main.storyboard */; };
 		C8D689E71DE7D8A000A81F6D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D689E61DE7D8A000A81F6D /* Assets.xcassets */; };
 		C8D689EA1DE7D8A000A81F6D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C8D689E81DE7D8A000A81F6D /* LaunchScreen.storyboard */; };
-		C8D689F31DE7D8D000A81F6D /* YQCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C8D689F21DE7D8D000A81F6D /* YQCalendarView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C833DB671DEBBD3F00F3ACA2 /* NSDate+YQCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+YQCalendar.h"; sourceTree = "<group>"; };
-		C833DB681DEBBD3F00F3ACA2 /* NSDate+YQCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+YQCalendar.m"; sourceTree = "<group>"; };
-		C833DB6A1DEBC46C00F3ACA2 /* YQCalendarItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YQCalendarItemView.h; sourceTree = "<group>"; };
-		C833DB6B1DEBC46C00F3ACA2 /* YQCalendarItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YQCalendarItemView.m; sourceTree = "<group>"; };
-		C899FB1F1DEEA5F900D0F620 /* YQCalendarModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YQCalendarModel.h; sourceTree = "<group>"; };
-		C899FB201DEEA5F900D0F620 /* YQCalendarModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YQCalendarModel.m; sourceTree = "<group>"; };
+		C899FB231DEEC81100D0F620 /* NSDate+YQCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+YQCalendar.h"; sourceTree = "<group>"; };
+		C899FB241DEEC81100D0F620 /* NSDate+YQCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+YQCalendar.m"; sourceTree = "<group>"; };
+		C899FB251DEEC81100D0F620 /* YQCalendarItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YQCalendarItemView.h; sourceTree = "<group>"; };
+		C899FB261DEEC81100D0F620 /* YQCalendarItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YQCalendarItemView.m; sourceTree = "<group>"; };
+		C899FB271DEEC81100D0F620 /* YQCalendarModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YQCalendarModel.h; sourceTree = "<group>"; };
+		C899FB281DEEC81100D0F620 /* YQCalendarModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YQCalendarModel.m; sourceTree = "<group>"; };
+		C899FB291DEEC81100D0F620 /* YQCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YQCalendarView.h; sourceTree = "<group>"; };
+		C899FB2A1DEEC81100D0F620 /* YQCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YQCalendarView.m; sourceTree = "<group>"; };
+		C899FB2F1DEED5C600D0F620 /* YQEventModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YQEventModel.h; sourceTree = "<group>"; };
+		C899FB301DEED5C600D0F620 /* YQEventModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YQEventModel.m; sourceTree = "<group>"; };
 		C8D689D71DE7D8A000A81F6D /* NSCalendarDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NSCalendarDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D689DB1DE7D8A000A81F6D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C8D689DD1DE7D8A000A81F6D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -36,8 +41,6 @@
 		C8D689E61DE7D8A000A81F6D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C8D689E91DE7D8A000A81F6D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C8D689EB1DE7D8A000A81F6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C8D689F11DE7D8D000A81F6D /* YQCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YQCalendarView.h; sourceTree = "<group>"; };
-		C8D689F21DE7D8D000A81F6D /* YQCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YQCalendarView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +54,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C899FB221DEEC81100D0F620 /* YQCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				C899FB231DEEC81100D0F620 /* NSDate+YQCalendar.h */,
+				C899FB241DEEC81100D0F620 /* NSDate+YQCalendar.m */,
+				C899FB251DEEC81100D0F620 /* YQCalendarItemView.h */,
+				C899FB261DEEC81100D0F620 /* YQCalendarItemView.m */,
+				C899FB271DEEC81100D0F620 /* YQCalendarModel.h */,
+				C899FB281DEEC81100D0F620 /* YQCalendarModel.m */,
+				C899FB291DEEC81100D0F620 /* YQCalendarView.h */,
+				C899FB2A1DEEC81100D0F620 /* YQCalendarView.m */,
+			);
+			path = YQCalendar;
+			sourceTree = "<group>";
+		};
 		C8D689CE1DE7D8A000A81F6D = {
 			isa = PBXGroup;
 			children = (
@@ -74,14 +92,9 @@
 				C8D689DE1DE7D8A000A81F6D /* AppDelegate.m */,
 				C8D689E01DE7D8A000A81F6D /* ViewController.h */,
 				C8D689E11DE7D8A000A81F6D /* ViewController.m */,
-				C8D689F11DE7D8D000A81F6D /* YQCalendarView.h */,
-				C8D689F21DE7D8D000A81F6D /* YQCalendarView.m */,
-				C833DB6A1DEBC46C00F3ACA2 /* YQCalendarItemView.h */,
-				C833DB6B1DEBC46C00F3ACA2 /* YQCalendarItemView.m */,
-				C899FB1F1DEEA5F900D0F620 /* YQCalendarModel.h */,
-				C899FB201DEEA5F900D0F620 /* YQCalendarModel.m */,
-				C833DB671DEBBD3F00F3ACA2 /* NSDate+YQCalendar.h */,
-				C833DB681DEBBD3F00F3ACA2 /* NSDate+YQCalendar.m */,
+				C899FB2F1DEED5C600D0F620 /* YQEventModel.h */,
+				C899FB301DEED5C600D0F620 /* YQEventModel.m */,
+				C899FB221DEEC81100D0F620 /* YQCalendar */,
 				C8D689E31DE7D8A000A81F6D /* Main.storyboard */,
 				C8D689E61DE7D8A000A81F6D /* Assets.xcassets */,
 				C8D689E81DE7D8A000A81F6D /* LaunchScreen.storyboard */,
@@ -171,12 +184,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C899FB2B1DEEC81100D0F620 /* NSDate+YQCalendar.m in Sources */,
+				C899FB2D1DEEC81100D0F620 /* YQCalendarModel.m in Sources */,
+				C899FB2C1DEEC81100D0F620 /* YQCalendarItemView.m in Sources */,
 				C8D689E21DE7D8A000A81F6D /* ViewController.m in Sources */,
-				C833DB691DEBBD3F00F3ACA2 /* NSDate+YQCalendar.m in Sources */,
+				C899FB2E1DEEC81100D0F620 /* YQCalendarView.m in Sources */,
 				C8D689DF1DE7D8A000A81F6D /* AppDelegate.m in Sources */,
-				C899FB211DEEA5F900D0F620 /* YQCalendarModel.m in Sources */,
-				C833DB6C1DEBC46C00F3ACA2 /* YQCalendarItemView.m in Sources */,
-				C8D689F31DE7D8D000A81F6D /* YQCalendarView.m in Sources */,
+				C899FB311DEED5C600D0F620 /* YQEventModel.m in Sources */,
 				C8D689DC1DE7D8A000A81F6D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

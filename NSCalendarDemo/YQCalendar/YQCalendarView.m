@@ -1,4 +1,4 @@
- //
+//
 //  YQCalendarView.m
 //  NSCalendarDemo
 //
@@ -9,6 +9,7 @@
 #import "YQCalendarView.h"
 #import "YQCalendarItemView.h"
 #import "NSDate+YQCalendar.h"
+#import "YQEventModel.h"
 
 #define kScreen_width [UIScreen mainScreen].bounds.size.width
 #define kScreen_height [UIScreen mainScreen].bounds.size.height
@@ -54,15 +55,13 @@
     return _itemModelArray;
 }
 
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.clipsToBounds = YES;
     
     self.year = [NSDate currentYear];
     self.month = [NSDate currentMonth];
-    selectDay = [NSDate currentDay];
-    selectMonth = [NSDate currentMonth];
-    selectYear = [NSDate currentYear];
     
     [self initWeekTitleLabel];
     [self initDaysTitleLabel];
@@ -75,12 +74,9 @@
     if (self) {
         
         self.clipsToBounds = YES;
-
+        
         self.year = [NSDate currentYear];
         self.month = [NSDate currentMonth];
-        selectDay = [NSDate currentDay];
-        selectMonth = [NSDate currentMonth];
-        selectYear = [NSDate currentYear];
         
         [self initWeekTitleLabel];
         [self initDaysTitleLabel];
@@ -91,49 +87,49 @@
 }
 
 - (void)initWeekTitleLabel {
-    @autoreleasepool {
-        NSArray *weekArr = @[@"日", @"一", @"二", @"三", @"四", @"五", @"六"];
-        
-        for (int i = 0; i < 7; i++) {
-            UILabel *weekTitleLabel = [[UILabel alloc]init];
-            weekTitleLabel.frame = CGRectMake(kCalendarView_Width/7 * i, 0, kCalendarView_Width/7, kItem_Width);
-            weekTitleLabel.textAlignment = NSTextAlignmentCenter;
-            weekTitleLabel.font = [UIFont systemFontOfSize:14];
-            if (i == 0 || i == 6) {
-                weekTitleLabel.textColor = [UIColor grayColor];
-            }else {
-                weekTitleLabel.textColor = [UIColor blackColor];
-            }
-            weekTitleLabel.text = weekArr[i];
-            [self addSubview:weekTitleLabel];
+    
+    NSArray *weekArr = @[@"日", @"一", @"二", @"三", @"四", @"五", @"六"];
+    
+    for (int i = 0; i < 7; i++) {
+        UILabel *weekTitleLabel = [[UILabel alloc]init];
+        weekTitleLabel.frame = CGRectMake(kCalendarView_Width/7 * i, 0, kCalendarView_Width/7, kItem_Width);
+        weekTitleLabel.textAlignment = NSTextAlignmentCenter;
+        weekTitleLabel.font = [UIFont systemFontOfSize:14];
+        if (i == 0 || i == 6) {
+            weekTitleLabel.textColor = [UIColor grayColor];
+        }else {
+            weekTitleLabel.textColor = [UIColor blackColor];
         }
+        weekTitleLabel.text = weekArr[i];
+        [self addSubview:weekTitleLabel];
     }
+    
 }
 
 - (void)initDaysTitleLabel {
-    @autoreleasepool {
-        for (int i = 0; i< kItemTotleNum; i++) {
-            
-            NSInteger lat = i / 7;
-            NSInteger lng = i % 7;
-            
-            YQCalendarItemView *itemView = [[YQCalendarItemView alloc]initWithFrame:CGRectMake(kCalendarView_Width/7 * lng + (kCalendarView_Width/7 - kItem_Width)/2,
-                                                                                               kItem_Width + kItem_Width * lat,
-                                                                                               kItem_Width,
-                                                                                               kItem_Width)];
-            itemView.tag = i;
-            itemView.delegate = self;
-            [self addSubview:itemView];
-            
-            [self.itemViewArray addObject:itemView];
-        }
+    
+    for (int i = 0; i< kItemTotleNum; i++) {
+        
+        NSInteger lat = i / 7;
+        NSInteger lng = i % 7;
+        
+        YQCalendarItemView *itemView = [[YQCalendarItemView alloc]initWithFrame:CGRectMake(kCalendarView_Width/7 * lng + (kCalendarView_Width/7 - kItem_Width)/2,
+                                                                                           kItem_Width + kItem_Width * lat,
+                                                                                           kItem_Width,
+                                                                                           kItem_Width)];
+        itemView.tag = i;
+        itemView.delegate = self;
+        [self addSubview:itemView];
+        
+        [self.itemViewArray addObject:itemView];
     }
+    
 }
 
 - (void)getDayTitleArrWithMonth:(NSInteger)month year:(NSInteger)year {
     
     [self.itemModelArray removeAllObjects];
-
+    
     // 1. 获取当前显示视图中上个月需要显示的部分
     NSMutableArray *lastMonthDayTitleArray = [NSMutableArray array];
     [lastMonthDayTitleArray addObjectsFromArray:[NSDate getLastMonthDaysTitleWithCurrentMonth:month currentYear:year]];
@@ -164,21 +160,23 @@
 
 - (void)reloadItemViews{
     
-    @autoreleasepool {
+    YQCalendarModel *lastSelectItemModel = _lastSelectCalendar;
     
-        YQCalendarModel *lastSelectItemModel = _lastSelectCalendar;
+    for (int i = 0; i< kItemTotleNum; i++) {
         
-        for (int i = 0; i< kItemTotleNum; i++) {
+        YQCalendarItemView *itemView = _itemViewArray[i];
+        
+        if (i < _itemModelArray.count) {
             
-            YQCalendarItemView *itemView = _itemViewArray[i];
+            YQCalendarModel *itemModel = _itemModelArray[i];
             
-            if (i < _itemModelArray.count) {
-                YQCalendarModel *itemModel = _itemModelArray[i];
-                if (itemModel.date == lastSelectItemModel.date) {
-                    itemView.calendarModel = lastSelectItemModel;
-                }else{
-                    itemView.calendarModel = itemModel;
-                }
+            if (itemModel.date == lastSelectItemModel.date) {
+                
+                itemView.calendarModel = lastSelectItemModel;
+                
+            }else{
+                
+                itemView.calendarModel = itemModel;
             }
         }
     }
@@ -191,11 +189,11 @@
     self.month = [NSDate getLastMonthWithMonth:self.month];
     
     [self getDayTitleArrWithMonth:self.month year:self.year];
- 
+    
 }
 
 - (void)nextMonth {
-
+    
     // 获取下个月对应的年月
     self.year = [NSDate getYearOfNextMonthWithMonth:self.month year:self.year];
     self.month = [NSDate getNextMonthWithMonth:self.month];
@@ -206,15 +204,17 @@
 
 #pragma mark - YQCalendarItemViewDelegate
 - (void)didSelectCalendarItemView:(YQCalendarItemView *)calendarItemView {
-
+    
+    // 若选中的日期为当前日期则直接返回
     if (_lastSelectCalendar == calendarItemView.calendarModel) {
         return;
     }
     
     if (_lastSelectCalendar) {
         
+        // 更新上次选中的日期
         YQCalendarModel *itemModel = _lastSelectCalendar;
-
+        
         NSInteger weekDay = [[NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian] component:NSWeekdayCalendarUnit fromDate:itemModel.date];
         
         if (itemModel.day == [NSDate currentDay] && itemModel.month == [NSDate currentMonth]) {
@@ -230,6 +230,7 @@
             itemModel.itemStyle = ItemViewSelectStyleNone;
         }
         
+        // 找到存放上次选中日期的 view
         [_itemViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             YQCalendarItemView *itemView = (YQCalendarItemView *)obj;
@@ -237,6 +238,8 @@
             if ([itemView.calendarModel.date isEqualToDate:_lastSelectCalendar.date]) {
                 
                 [itemView setCalendarModel:itemModel];
+                
+                return ;
             }
             
         }];
@@ -245,11 +248,31 @@
     
     _lastSelectCalendar = calendarItemView.calendarModel;
     
-    [self doSomethingForTableView];
+    // doSomething
+    
+    if ([self.delegate respondsToSelector:@selector(calendarView:didSelectItemAtDate:)]) {
+        [self.delegate calendarView:self didSelectItemAtDate:calendarItemView.calendarModel.date];
+    }
 }
 
-- (void)doSomethingForTableView {
-    NSLog(@"%ld-%ld-%ld 没有安排", (long)_lastSelectCalendar.year, (long)_lastSelectCalendar.month, (long)_lastSelectCalendar.day);
+- (void)setEventsArray:(NSMutableArray *)eventsArray {
+    
+    [eventsArray enumerateObjectsUsingBlock:^(YQEventModel * _Nonnull eventModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        
+        [_itemModelArray enumerateObjectsUsingBlock:^(YQCalendarModel * _Nonnull calendarModel, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if ([eventModel.date isEqualToDate:calendarModel.date]) {
+                calendarModel.eventModel = eventModel;
+                
+                *stop = YES;
+            }
+        }];
+        
+        
+    }];
+    [self reloadItemViews];
+   
 }
 
 @end
